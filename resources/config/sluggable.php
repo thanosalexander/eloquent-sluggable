@@ -4,11 +4,11 @@ return [
 
     /**
      * What attributes do we use to build the slug?
-     * This can be a single field, like "name" which will build a slug from:
+     * This can be a single field, like 'name' which will build a slug from:
      *
      *     $model->name;
      *
-     * Or it can be an array of fields, like ("name", "company"), which builds a slug from:
+     * Or it can be an array of fields, like ['name', 'company'], which builds a slug from:
      *
      *     $model->name . ' ' . $model->company;
      *
@@ -74,6 +74,18 @@ return [
      */
     
     'uniqueSuffix' => null,
+
+    /**
+     * The "alternate" source fields to use if the normal source fields are
+     * empty, and `unique` slugs are being enforced.
+     *
+     * By default, empty source fields mean no slug is generated, but this
+     * can be an issue when the slug field needs to be unique.  Setting
+     * this to a string or array of strings will use those fields as the source
+     * instead.
+     */
+
+    'uniqueSourceIfEmpty' => null,
 
     /**
      * Should we include the trashed items when generating a unique slug?

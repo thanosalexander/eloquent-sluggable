@@ -2,6 +2,7 @@
 
 use Cviebrock\EloquentSluggable\Tests\Models\Author;
 use Cviebrock\EloquentSluggable\Tests\Models\Post;
+use Cviebrock\EloquentSluggable\Tests\Models\PostWithUniqueIfEmpty;
 use Cviebrock\EloquentSluggable\Tests\Models\PostWithUniqueSlugConstraints;
 
 /**
@@ -87,5 +88,16 @@ class UniqueTests extends TestCase
         $post->save();
 
         $this->assertEquals('my-first-post-1', $post->slug);
+    }
+
+    /**
+     * Test uniqueIfEmpty sources
+     */
+    public function testUniqueIfEmpty()
+    {
+        $post = new PostWithUniqueIfEmpty(['title' => '']);
+        $post->save();
+
+        $this->assertEquals($post->id, $post->slug);
     }
 }

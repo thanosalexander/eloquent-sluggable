@@ -26,6 +26,7 @@ Easy creation of slugs for your Eloquent models in Laravel 5.
     * [separator](#separator)
     * [source](#source)
     * [unique](#unique)
+    * [uniqueSourceOnEmpty](#uniquesourceonempty)
     * [uniqueSuffix](#uniquesuffix)
 * [Extending Sluggable](#extending-sluggable)
     * [customizeSlugEngine](#customizeslugengine)
@@ -290,14 +291,16 @@ Here is an example configuration, with all the default settings shown:
 
 ```php
 return [
-    'source'          => null,
-    'maxLength'       => null,
-    'method'          => null,
-    'separator'       => '-',
-    'unique'          => true,
-    'uniqueSuffix'    => null,
-    'includeTrashed'  => false,
-    'reserved'        => null,
+    'source'              => null,
+    'maxLength'           => null,
+    'method'              => null,
+    'separator'           => '-',
+    'unique'              => true,
+    'uniqueSuffix'        => null,
+    'uniqueSourceOnEmpty' => null,
+    'includeTrashed'      => false,
+    'reserved'            => null,
+    'onUpdate'            => false,
 ];
 ```
 
@@ -491,6 +494,43 @@ to use letters instead of numbers as a suffix, this is one way to achieve that:
 
     return chr($size + 96);
 }
+```
+
+### uniqueSourceIfEmpty
+
+By default, the package doesn't generate slugs when the source fields are empty. This can be
+an issue when you also want slugs to be unique, since the second case where you try and
+slug a model with empty source fields will generate a non-unique slug (i.e. an empty string).
+
+In this scenario, you can use this setting to define an "alternate" source for your model's
+slug, similar to how the `source` configuration works.  For example:
+
+```php
+class Person extends Eloquent
+{
+    use Sluggable;
+
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source'              => 'name',
+                'unique'              => 'true',
+                'uniqueSourceIfEmpty' => 'id'
+            ]
+        ];
+    }
+}
+```
+
+If I then generate a Person model with no name, the slug will still be created using the
+primary key of the model:
+
+```php
+$person = new Person(['name' => '']);
+$person->save();
+
+echo $person->slug;  // outputs "123", or whatever the person's ID is.
 ```
 
 ### includeTrashed
