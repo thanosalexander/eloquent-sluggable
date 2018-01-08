@@ -1,5 +1,6 @@
 <?php namespace Cviebrock\EloquentSluggable\Tests;
 
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\Tests\Models\PostIssue403;
 
 /**
@@ -19,6 +20,10 @@ class IssueTests extends TestCase
             'title' => 'چای گزنه با برگ زیتون'
         ]);
         $this->assertEquals('چای-گزنه-با-برگ-زیتون', $post->slug);
+
+        $slug = SlugService::createSlug(PostIssue403::class, 'slug', 'چای گزنه با برگ زیتون');
+        $this->assertEquals('چای-گزنه-با-برگ-زیتون-1', $slug);
+
     }
 
 }
